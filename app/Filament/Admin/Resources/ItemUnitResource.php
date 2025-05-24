@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Admin\Resources\ItemUnitResource\Pages;
 use App\Filament\Admin\Resources\ItemUnitResource\RelationManagers;
 use App\Filament\Exports\ItemUnitExporter;
@@ -82,12 +83,7 @@ class ItemUnitResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->description(function ($state, $record) {
-                        if ($state === 'returned' && !empty($record->return_note)) {
-                            return $record->return_note;
-                        }
-                        return null;
-                    })->wrap()
+
                     ->color(fn($state) => match ($state) {
                         'aktif' => 'success',
                         'rusak' => 'danger',
@@ -98,6 +94,11 @@ class ItemUnitResource extends Resource
 
                 Tables\Columns\TextColumn::make('note')
                     ->label('Description')
+                    ->wrap(),
+
+
+                Tables\Columns\TextColumn::make('return_note')
+                    ->label('Return Note')
                     ->wrap(),
 
                 Tables\Columns\TextColumn::make('return_date')
@@ -136,8 +137,12 @@ class ItemUnitResource extends Resource
                 [
                     ExportAction::make()
                         ->exporter(ItemUnitExporter::class)
-                        ->label('Ekspor')
-                   
+                        ->label('Ekspor'),
+                    FilamentExportHeaderAction::make('export')
+
+                        ->disableAdditionalColumns() // Disable additional columns input
+
+
                 ]
             )
             ->bulkActions([
