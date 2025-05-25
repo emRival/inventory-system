@@ -21,6 +21,40 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Getting Started
+
+To use this project, follow these steps:
+
+1. Run migrations:
+    ```bash
+    php artisan migrate
+    ```
+
+2. Seed the database:
+    ```bash
+    php artisan db:seed --class=ShieldSeeder
+    ```
+
+3. Generate Shield permissions:
+    ```bash
+    php artisan shield:generate --all
+    ```
+
+4. Create a Filament user:
+    ```bash
+    php artisan make:filament-user
+    ```
+
+5. Assign super admin role:
+    ```bash
+    php artisan shield:super-admin
+    ```
+
+6. Start the queue worker for QR code generation:
+    ```bash
+    php artisan queue:work --daemon
+    ```
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
