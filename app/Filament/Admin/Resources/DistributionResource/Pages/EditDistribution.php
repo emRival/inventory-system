@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\DistributionResource\Pages;
 
 use App\Filament\Admin\Resources\DistributionResource;
+use App\Livewire\QRProgressBar;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

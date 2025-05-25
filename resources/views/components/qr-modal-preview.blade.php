@@ -11,7 +11,7 @@
 @if ($url)
     <div x-data="{ open: false }" class="flex items-center h-full py-2 cursor-pointer" @click.stop="open = true" x-cloak>
 
-        <img src="{{ $url }}"
+        <img src="{{ asset('storage/qrs/' . $getRecord()->qr_code . '.png') }}"
             class="w-20 h-20 rounded-lg shadow-md border-2 border-white/20 hover:ring-2 hover:ring-blue-400 transition"
             alt="QR Code" />
 

@@ -81,6 +81,15 @@ class ItemUnitResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('distribution.product.name')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('condition')
+                    ->label('Condition')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => strtoupper($state))
+                    ->color(fn($state) => match ($state) {
+                        'baru' => 'primary',
+                        'bekas' => 'secondary',
+                        default => 'secondary',
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
 
@@ -91,6 +100,7 @@ class ItemUnitResource extends Resource
                         'returned' => 'primary',
                         default => 'secondary',
                     }),
+
 
                 Tables\Columns\TextColumn::make('note')
                     ->label('Description')
@@ -128,6 +138,22 @@ class ItemUnitResource extends Resource
                         'hilang' => 'Hilang',
                         'returned' => 'Dikembalikan',
                     ]),
+                Tables\Filters\Filter::make('date_range')
+                    ->label('Date Range')
+                    ->form([
+                        Forms\Components\DatePicker::make('start_date')
+                            ->label('Start Date'),
+                        Forms\Components\DatePicker::make('end_date')
+                            ->label('End Date'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['start_date'] ?? null) {
+                            $query->whereDate('created_at', '>=', $data['start_date']);
+                        }
+                        if ($data['end_date'] ?? null) {
+                            $query->whereDate('created_at', '<=', $data['end_date']);
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -135,14 +161,9 @@ class ItemUnitResource extends Resource
             ])
             ->headerActions(
                 [
-                    ExportAction::make()
-                        ->exporter(ItemUnitExporter::class)
-                        ->label('Ekspor'),
+
                     FilamentExportHeaderAction::make('export')
-
                         ->disableAdditionalColumns() // Disable additional columns input
-
-
                 ]
             )
             ->bulkActions([

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Admin\Resources\ItemUnitRelationManagerResource\RelationManagers;
 
+use App\Jobs\DispatchItemUnitQRsInBatch;
+use App\Jobs\GenerateItemUnitQRsBatch;
 use Illuminate\Support\Str;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
@@ -12,6 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
 class ItemUnitsRelationManager extends RelationManager
@@ -36,6 +39,7 @@ class ItemUnitsRelationManager extends RelationManager
         $total = $record->quantity;
 
         return $table
+            ->poll('5s')
             ->heading(new HtmlString("<div class='text-sm text-gray-600'>QR dibuat: <strong>$generated dari $total</strong></div>"))
             ->columns([
                 Tables\Columns\ViewColumn::make('qr_code')
@@ -56,6 +60,16 @@ class ItemUnitsRelationManager extends RelationManager
                         'returned' => 'primary',
                         default => 'secondary',
                     }),
+                Tables\Columns\TextColumn::make('condition')
+                    ->label('Condition')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => strtoupper($state))
+                    ->color(fn($state) => match ($state) {
+
+                        'baru' => 'primary',
+                        'bekas' => 'secondary',
+                        default => 'secondary',
+                    }),
                 Tables\Columns\TextColumn::make('return_note')
                     ->label('Return Note')
                     ->wrap()
@@ -65,7 +79,7 @@ class ItemUnitsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('created_at')->since(),
                 Tables\Columns\TextColumn::make('return_date')->date()->toggleable(),
-            ])
+            ])->defaultSort('updated_at', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -134,22 +148,16 @@ class ItemUnitsRelationManager extends RelationManager
                     ->label('Generate All')
                     ->requiresConfirmation()
                     ->action(function () {
-                        $record = $this->ownerRecord;
-                        $toGenerate = $record->quantity - $record->itemUnits()->count();
-
-                        for ($i = 0; $i < $toGenerate; $i++) {
-                            $record->itemUnits()->create([
-                                'qr_code' => Str::uuid()->toString(),
-                                'status' => 'aktif',
-                            ]);
-                        }
+                        $userId = Auth::id(); // ambil ID user yang login
+                        DispatchItemUnitQRsInBatch::dispatch($this->ownerRecord->id, $userId);
 
                         Notification::make()
-                            ->title("Berhasil generate $toGenerate QR code")
+                            ->title("Proses generate QR sedang dijalankan bertahap")
                             ->success()
                             ->send();
                     })
                     ->icon('heroicon-o-plus'),
+
 
                 // ✅ Single QR Generator with Modal Note
                 Action::make('AddOneWithNote')
@@ -173,14 +181,17 @@ class ItemUnitsRelationManager extends RelationManager
                             ->maxLength(255),
                     ])
                     ->action(function (array $data) {
-                        $this->ownerRecord->itemUnits()->create([
-                            'qr_code' => Str::uuid()->toString(),
-                            'status' => 'aktif',
-                            'note' => $data['note'] ?? null,
-                        ]);
+                        $itemId = $this->ownerRecord->id;
+                        $note   = $data['note'] ?? null;
+                        $userId = Auth::id();
 
+                        // Dispatch job untuk 1 QR di background
+                        GenerateItemUnitQRsBatch::dispatch($itemId, 1, $userId, $note);
+
+
+                        // Tampilkan toast bahwa job sudah dijalankan
                         Notification::make()
-                            ->title("1 QR code berhasil dibuat")
+                            ->title('1 QR code sedang dibuat di background')
                             ->success()
                             ->send();
                     }),

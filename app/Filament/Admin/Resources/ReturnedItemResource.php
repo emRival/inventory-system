@@ -52,6 +52,15 @@ class ReturnedItemResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('distribution.product.name')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('condition')
+                    ->label('Condition')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => strtoupper($state))
+                    ->color(fn($state) => match ($state) {
+                        'baru' => 'primary',
+                        'bekas' => 'secondary',
+                        default => 'secondary',
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
 
