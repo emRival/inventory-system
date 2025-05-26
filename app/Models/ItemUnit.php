@@ -10,10 +10,15 @@ class ItemUnit extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'qr_code';
+    protected $primaryKey = 'qr_code'; // Correct
+    public $incrementing = false;    // Crucial: Tell Eloquent 'qr_code' is not auto-incrementing
+    protected $keyType = 'string';
 
-    protected $casts = ['qr_code' => 'string'];
-    // protected $keyType = 'string';
+
+    protected $casts = [
+        'qr_code' => 'string',     // Good, reinforces it's a string
+        'return_date' => 'date',   // Example: Good practice to cast dates
+    ];
 
     protected $fillable = [
         'distribution_id',

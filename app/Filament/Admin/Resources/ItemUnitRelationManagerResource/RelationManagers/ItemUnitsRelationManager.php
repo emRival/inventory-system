@@ -4,6 +4,8 @@ namespace App\Filament\Admin\Resources\ItemUnitRelationManagerResource\RelationM
 
 use App\Jobs\DispatchItemUnitQRsInBatch;
 use App\Jobs\GenerateItemUnitQRsBatch;
+use App\Models\ItemUnit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
@@ -15,7 +17,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Collection;
+use Filament\Tables\Actions\BulkAction;
 
 class ItemUnitsRelationManager extends RelationManager
 {
@@ -83,6 +88,25 @@ class ItemUnitsRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('Export')
+                        ->icon('heroicon-m-arrow-down-tray')
+                        // buang openUrlInNewTab() kalau mau streaming download
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (BulkAction $action, Collection $records) {
+                            // sekarang $records adalah koleksi Model yang kamu pilih
+                            // dd di sini pun akan menampilkan semua record, bukan cuma pertama
+                            // dd($records->toArray());
+
+                            $pdf = Pdf::loadView('pdf', [
+                                'records' => $records,
+                            ]);
+
+                            return response()->streamDownload(
+                                fn() => print($pdf->output()),
+                                'Distribution-'.now()->format('YmdHis').'.pdf'
+                            );
+                        }),
                 ]),
             ])
             ->actions([

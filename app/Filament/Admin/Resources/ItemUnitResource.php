@@ -18,6 +18,9 @@ use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Support\Collection;
+use Barryvdh\DomPDF\Facade\Pdf; // Import the Pdf facade from barryvdh/laravel-dompdf
 
 class ItemUnitResource extends Resource
 {
@@ -71,7 +74,11 @@ class ItemUnitResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            // ->recordKey('qr_code')
             ->columns([
+                Tables\Columns\TextColumn::make('qr_code') // This is your primary key
+                    ->label('QR Code (Primary Key)')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('qr_code')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -168,8 +175,34 @@ class ItemUnitResource extends Resource
             )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (\Illuminate\Database\Eloquent\Collection $records) {
+                            // For debugging Delete
+                            $keys = $records->modelKeys(); // Should be qr_codes
+                            \Illuminate\Support\Facades\Log::info('DeleteBulkAction - Record Keys being processed:', $keys);
+                            if (empty($keys)) {
+                                \Illuminate\Support\Facades\Log::warning('DeleteBulkAction - No record keys found for deletion.');
+                            }
+                            // dd('DeleteBulkAction record keys:', $keys);
+                        }),
+                    Tables\Actions\BulkAction::make('Export')
+                        ->icon('heroicon-m-arrow-down-tray')
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (BulkAction $action, \Illuminate\Database\Eloquent\Collection $records) { // Typehint Collection
+
+
+
+                            $pdf = Pdf::loadView('pdf', [
+                                'records' => $records,
+                            ]);
+
+                            return response()->streamDownload(
+                                fn() => print($pdf->output()),
+                                'item-units.pdf'
+                            );
+                        }),
+                ])
             ]);
     }
 
@@ -179,6 +212,11 @@ class ItemUnitResource extends Resource
             //
         ];
     }
+
+    // protected function shouldSelectCurrentPageOnly(): bool
+    // {
+    //     return true;
+    // }
 
     public static function getPages(): array
     {

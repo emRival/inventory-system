@@ -7,89 +7,102 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Getting Started from Scratch (Windows)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+To set up this Laravel project on a Windows system, follow these steps:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Option 1: Install Individually**:
+    - **Install PHP**: Ensure PHP version 8.3 or higher is installed. You can download it from [php.net](https://www.php.net/downloads). Add PHP to your system's PATH environment variable.
+    - **Install Composer**: Download and install Composer from [getcomposer.org](https://getcomposer.org/download/). During installation, ensure PHP is correctly detected.
+    - **Install Node.js and npm**: Download and install Node.js from [nodejs.org](https://nodejs.org/). The npm package manager is included with Node.js.
+    - **Install MySQL**: Download and install MySQL from [mysql.com](https://dev.mysql.com/downloads/). During installation, configure the root password and ensure the MySQL service is running.
 
-## Getting Started
+2. **Option 2: Use Herd**:
+    - If you prefer a simpler setup, you can download [Herd](https://herd.laravel.com/), which bundles PHP, Composer, and other tools required for Laravel development.
 
-To use this project, follow these steps:
+### Project Setup
 
-1. Run migrations:
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/your-repo/inventory-system.git
+    cd inventory-system
+    ```
+
+2. **Copy `.env` File**:
+    ```bash
+    copy .env.example .env
+    ```
+
+3. **Update `.env` Configuration**:
+    - Set the database connection to MySQL:
+        ```
+        DB_CONNECTION=mysql
+        DB_HOST=127.0.0.1
+        DB_PORT=3306
+        DB_DATABASE=your_database_name
+        DB_USERNAME=your_username
+        DB_PASSWORD=your_password
+        ```
+
+4. **Install Dependencies**:
+    - Install PHP dependencies:
+        ```bash
+        composer install
+        ```
+    - Install JavaScript dependencies:
+        ```bash
+        npm install
+        ```
+
+5. **Generate Application Key**:
+    ```bash
+    php artisan key:generate
+    ```
+
+6. **Run Migrations and Seeders**:
     ```bash
     php artisan migrate
+    php artisan db:seed
     ```
 
-2. Seed the database:
+7. **Build Frontend Assets**:
     ```bash
-    php artisan db:seed --class=ShieldSeeder
+    npm run dev
     ```
 
-3. Generate Shield permissions:
+8. **Start the Development Server**:
     ```bash
-    php artisan shield:generate --all
+    php artisan serve
     ```
 
-4. Create a Filament user:
-    ```bash
-    php artisan make:filament-user
-    ```
-
-5. Assign super admin role:
-    ```bash
-    php artisan shield:super-admin
-    ```
-
-6. Start the queue worker for QR code generation:
+9. **Queue Worker**:
+    Start the queue worker for background tasks:
     ```bash
     php artisan queue:work --daemon
     ```
 
-## Learning Laravel
+10. **Generate Shield Permissions**:
+    ```bash
+    php artisan shield:generate --all
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+11. **Create Filament User**:
+    ```bash
+    php artisan make:filament-user
+    ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+12. **Create Super Admin**:
+    ```bash
+    php artisan shield:super-admin
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Additional Notes
 
-### Premium Partners
+- Ensure your `.env` file is properly configured for your environment.
+- For production, use `npm run build` to compile assets and configure a web server like IIS, Nginx, or Apache.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+You are now ready to start using the Laravel project!
