@@ -30,6 +30,16 @@ class ReturnedItemResource extends Resource
     protected static ?string $slug = 'returned-items';
     protected static ?string $navigationLabel = 'Item Returned';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'returned')->count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
+    }
+
 
     public static function form(Form $form): Form
     {

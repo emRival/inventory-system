@@ -19,7 +19,15 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube'; // Barang
     protected static ?string $navigationGroup = 'Manajemen Barang';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
+    }
 
     public static function form(Form $form): Form
     {

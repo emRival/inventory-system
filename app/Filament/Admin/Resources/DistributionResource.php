@@ -24,6 +24,16 @@ class DistributionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-truck'; // Distribusi barang
     protected static ?string $navigationGroup = 'Distribusi';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
+    }
+
 
 
     public static function form(Form $form): Form

@@ -8,6 +8,8 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -21,6 +23,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Illuminate\Support\Str;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 
 
@@ -40,13 +43,21 @@ class AdminPanelProvider extends PanelProvider
             ->login(\Filament\Pages\Auth\Login::class)
             ->colors([
                 'primary' => Color::Amber,
+                'secondary' => Color::Gray,
+                'success' => Color::Emerald,
+                'danger' => Color::Red,
+                'warning' => Color::Yellow,
+                'info' => Color::Blue,
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
                     ->label(fn() => Auth::user()->name)
                     ->url(fn(): string => EditProfilePage::getUrl())
-                    ->icon('heroicon-m-user-circle')
-                //If you are using tenancy need to check with the visible method where ->company() is the relation between the user and tenancy model as you called
+                    ->icon('heroicon-m-user-circle'),
+                'roles' => MenuItem::make()
+                    ->label(fn() => __('Role :') . ' ' . ucwords(str_replace('_', ' ', Auth::user()->roles[0]['name'] ?? 'Unknown')))
+                    ->icon('heroicon-o-shield-check'),
+                // roles "anda login sebagai
 
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
@@ -83,6 +94,8 @@ class AdminPanelProvider extends PanelProvider
                     ->shouldShowDeleteAccountForm(false)
                     ->shouldRegisterNavigation(false)
             ])
+
+
 
 
             ->authMiddleware([

@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\SectorResource\Pages;
 use App\Filament\Admin\Resources\SectorResource\RelationManagers;
+use App\Filament\Admin\Resources\SectorResource\RelationManagers\DistributionsRelationManager;
 use App\Models\Sector;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
@@ -24,36 +25,49 @@ class SectorResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Sektor tujuan
     protected static ?string $navigationGroup = 'Distribusi';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
+    }
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Group::make([
-                    Section::make([
-
+                Section::make('Sector Details')
+                    ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->label('Sector Name')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('location')
+                            ->label('Location Name')
                             ->required()
                             ->maxLength(255),
+                    ])
+                    ->columns(2),
+
+                Section::make('Map Details')
+                    ->schema([
                         OSMMap::make('locations')
                             ->label('Locations')
                             ->showMarker()
                             ->draggable()
                             ->zoom(18)
-
                             ->extraControl([
                                 'zoomDelta'           => 1,
                                 'zoomSnap'            => 0.25,
                                 'wheelPxPerZoomLevel' => 60
                             ])
                             ->afterStateHydrated(function (Set $set, $record) {
-
                                 $latitude = $record->latitude ?? 0;
                                 $longitude = $record->longitude ?? 0;
-
 
                                 $set('locations', [
                                     'lat' => $latitude,
@@ -69,21 +83,22 @@ class SectorResource extends Resource
                                 $set('longitude', $state['lng']);
                             })
                             ->tilesUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+                    ]),
 
-                        Group::make([
-                            Forms\Components\TextInput::make('latitude')
-                                ->required()
-                                ->default(0)
-                                ->numeric(),
-                            Forms\Components\TextInput::make('longitude')
-                                ->required()
-                                ->default(0)
-                                ->numeric(),
-                        ])->columns(2),
-
+                Section::make('Coordinates')
+                    ->schema([
+                        Forms\Components\TextInput::make('latitude')
+                            ->label('Latitude')
+                            ->required()
+                            ->default(0)
+                            ->numeric(),
+                        Forms\Components\TextInput::make('longitude')
+                            ->label('Longitude')
+                            ->required()
+                            ->default(0)
+                            ->numeric(),
                     ])
-                ]),
-
+                    ->columns(2),
             ]);
     }
 
@@ -114,6 +129,7 @@ class SectorResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -127,7 +143,7 @@ class SectorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            DistributionsRelationManager::class,
         ];
     }
 
@@ -137,6 +153,8 @@ class SectorResource extends Resource
             'index' => Pages\ListSectors::route('/'),
             'create' => Pages\CreateSector::route('/create'),
             'edit' => Pages\EditSector::route('/{record}/edit'),
+            'view' => Pages\ViewSector::route('/{record}'), // Removed due to undefined class
+
         ];
     }
 }

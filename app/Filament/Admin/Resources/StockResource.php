@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Resources\SectorResource\RelationManagers\DistributionsRelationManager;
 use App\Filament\Admin\Resources\StockResource\Pages;
 use App\Filament\Admin\Resources\StockResource\RelationManagers;
 use App\Models\Product;
@@ -105,7 +106,7 @@ class StockResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                      Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -116,9 +117,7 @@ class StockResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

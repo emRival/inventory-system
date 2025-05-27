@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Support\Collection;
 use Barryvdh\DomPDF\Facade\Pdf; // Import the Pdf facade from barryvdh/laravel-dompdf
+use Filament\Tables\Enums\FiltersLayout;
 
 class ItemUnitResource extends Resource
 {
@@ -28,6 +29,16 @@ class ItemUnitResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-qr-code'; // Unit item QR
     protected static ?string $navigationGroup = 'Tracking Barang';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
+    }
 
     public static function form(Form $form): Form
     {
@@ -135,6 +146,7 @@ class ItemUnitResource extends Resource
                 Tables\Filters\SelectFilter::make('distribution_sector')
                     ->label('Sector')
                     ->relationship('distribution.sector', 'name')
+                    ->preload()
                     ->searchable(),
 
                 Tables\Filters\SelectFilter::make('status')
@@ -160,8 +172,8 @@ class ItemUnitResource extends Resource
                         if ($data['end_date'] ?? null) {
                             $query->whereDate('created_at', '<=', $data['end_date']);
                         }
-                    }),
-            ])
+                    })->columns(2)->columnSpan(2),
+            ], layout: FiltersLayout::AboveContent)->filtersFormColumns(4) // Place filters above content
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -190,16 +202,12 @@ class ItemUnitResource extends Resource
                         ->requiresConfirmation()
                         ->deselectRecordsAfterCompletion()
                         ->action(function (BulkAction $action, \Illuminate\Database\Eloquent\Collection $records) { // Typehint Collection
-
-
-
                             $pdf = Pdf::loadView('pdf', [
                                 'records' => $records,
                             ]);
-
                             return response()->streamDownload(
                                 fn() => print($pdf->output()),
-                                'item-units.pdf'
+                                'Item-Units-' . now()->format('YmdHis') . '.pdf'
                             );
                         }),
                 ])
