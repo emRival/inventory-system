@@ -17,32 +17,36 @@ class Distribution extends Model
         'date',
     ];
 
-    protected static function booted(): void
-{
-    static::creating(function ($record) {
-        $quantity = $record->quantity;
-        $productId = $record->product_id;
-        $condition = $record->condition;
+    protected static function booted()
+    {
+        // on create: subtract the full quantity
+        static::created(function (self $dist) {
+            Stock::where('product_id', $dist->product_id)
+                ->where('condition', $dist->condition)
+                ->decrement('quantity', $dist->quantity);
+        });
 
-        $stocks = Stock::where('product_id', $productId)
-            ->where('condition', $condition)
-            ->where('quantity', '>', 0)
-            ->orderBy('created_at')
-            ->get();
+        // on update: subtract or add _only_ the delta
+        static::updating(function (self $dist) {
+            $original = $dist->getOriginal('quantity');
+            $new      = $dist->quantity;
+            $delta    = $new - $original;
 
-        foreach ($stocks as $stock) {
-            if ($quantity <= 0) break;
+            // dd($delta);
 
-            $deduct = min($stock->quantity, $quantity);
-            $stock->decrement('quantity', $deduct);
-            $quantity -= $deduct;
-        }
-
-        if ($quantity > 0) {
-            throw new \Exception("Stok tidak mencukupi.");
-        }
-    });
-}
+            if ($delta > 0) {
+                // user increased from 10 → 11, so take 1 more
+                Stock::where('product_id', $dist->product_id)
+                    ->where('condition', $dist->condition)
+                    ->decrement('quantity', $delta);
+            } elseif ($delta < 0) {
+                // user reduced from 10 → 8, so give back 2
+                Stock::where('product_id', $dist->product_id)
+                    ->where('condition', $dist->condition)
+                    ->increment('quantity', abs($delta));
+            }
+        });
+    }
 
 
     public function product()

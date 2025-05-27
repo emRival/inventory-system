@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\DistributionResource\Pages;
 
 use App\Filament\Admin\Resources\DistributionResource;
 use App\Livewire\QRProgressBar;
+use App\Models\Stock;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -17,4 +18,5 @@ class EditDistribution extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+   
 }

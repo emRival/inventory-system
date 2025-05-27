@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\ItemUnitRelationManagerResource\RelationManager
 use App\Models\Distribution;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -16,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class DistributionResource extends Resource
 {
@@ -65,7 +67,7 @@ class DistributionResource extends Resource
                 ->numeric()
                 ->default(0)
                 ->minValue(1)
-                ->reactive()
+
                 ->suffix(fn(callable $get) => $get('unit'))
                 ->helperText(function (callable $get) {
                     $productId = $get('product_id');
@@ -88,7 +90,11 @@ class DistributionResource extends Resource
                         ->where('condition', $condition)
                         ->sum('quantity');
 
-                    if ($state > $totalStock) {
+                    $dist = Distribution::find($get('id'));
+                    $original = $dist?->getOriginal('quantity') ?? 0;
+                    $delta = $state - $original;
+
+                    if ($delta > $totalStock) {
                         $set('quantity', null);
 
                         Notification::make()
@@ -96,6 +102,18 @@ class DistributionResource extends Resource
                             ->body("Stok tersedia hanya $totalStock unit.")
                             ->danger()
                             ->send();
+                    }
+
+                    if ($totalStock <= 10) {
+
+                        $user = Auth::user();
+                        if ($user) {
+                            Notification::make()
+                                ->title('Peringatan Stok Rendah')
+                                ->body("Stok produk " . Product::find($get('product_id'))?->name . " ini tinggal $totalStock unit. Segera lakukan pengadaan.")
+                                ->warning()
+                                ->sendToDatabase($user);
+                        }
                     }
                 }),
 
