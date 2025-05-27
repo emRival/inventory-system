@@ -29,6 +29,7 @@ class ReturnedItemResource extends Resource
     protected static ?string $label = 'Item Returned';
     protected static ?string $slug = 'returned-items';
     protected static ?string $navigationLabel = 'Item Returned';
+    protected static ?int $navigationSort = 7;
 
     public static function getNavigationBadge(): ?string
     {

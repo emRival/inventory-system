@@ -22,6 +22,8 @@ class StockResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-archive-box'; // Stok gudang
     protected static ?string $navigationGroup = 'Gudang Pusat';
 
+    protected static ?int $navigationSort = 5;
+
 
     public static function form(Form $form): Form
     {

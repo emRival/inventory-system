@@ -23,6 +23,8 @@ class CategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-tag'; // Kategori
     protected static ?string $navigationGroup = 'Manajemen Barang';
 
+        protected static ?int $navigationSort = 1;
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

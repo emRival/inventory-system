@@ -19,6 +19,7 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube'; // Barang
     protected static ?string $navigationGroup = 'Manajemen Barang';
+    protected static ?int $navigationSort = 2;
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

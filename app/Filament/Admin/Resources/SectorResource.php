@@ -25,6 +25,8 @@ class SectorResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Sektor tujuan
     protected static ?string $navigationGroup = 'Distribusi';
 
+    protected static ?int $navigationSort = 3;
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

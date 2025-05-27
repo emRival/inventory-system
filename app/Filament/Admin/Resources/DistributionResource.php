@@ -23,6 +23,8 @@ class DistributionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck'; // Distribusi barang
     protected static ?string $navigationGroup = 'Distribusi';
+    // nomor urut navigasi
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {

@@ -29,6 +29,7 @@ class ItemUnitResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-qr-code'; // Unit item QR
     protected static ?string $navigationGroup = 'Tracking Barang';
+    protected static ?int $navigationSort = 6;
 
     public static function getNavigationBadge(): ?string
     {
