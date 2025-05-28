@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Widgets\SectorMap;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -69,6 +70,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
+
             ])
             ->middleware([
                 EncryptCookies::class,
