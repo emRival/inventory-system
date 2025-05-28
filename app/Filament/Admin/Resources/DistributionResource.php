@@ -94,6 +94,7 @@ class DistributionResource extends Resource
                     $original = $dist?->getOriginal('quantity') ?? 0;
                     $delta = $state - $original;
 
+                    // Periksa jika sisa stok tidak mencukupi
                     if ($delta > $totalStock) {
                         $set('quantity', null);
 
@@ -102,20 +103,27 @@ class DistributionResource extends Resource
                             ->body("Stok tersedia hanya $totalStock unit.")
                             ->danger()
                             ->send();
+
+                        return;
                     }
 
-                    if ($totalStock <= 10) {
+                    // Hitung sisa stok prediktif setelah update
+                    $predictedRemaining = $totalStock - $delta;
 
+                    if ($predictedRemaining <= 10) {
+                        $productName = Product::find($productId)?->name;
                         $user = Auth::user();
+
                         if ($user) {
                             Notification::make()
                                 ->title('Peringatan Stok Rendah')
-                                ->body("Stok produk " . Product::find($get('product_id'))?->name . " ini tinggal $totalStock unit. Segera lakukan pengadaan.")
+                                ->body("Stok produk \"$productName\" tersisa $predictedRemaining unit. Segera lakukan pengadaan.")
                                 ->warning()
                                 ->sendToDatabase($user);
                         }
                     }
                 }),
+
 
             Forms\Components\Select::make('sector_id')
                 ->relationship('sector', 'name')
