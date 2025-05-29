@@ -15,8 +15,8 @@ class Map extends MapWidget
     protected bool $hasBorder = false;
 
     protected string | array  $tileLayerUrl = [
-        'OpenStreetMap' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         'ArcGIS' => 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        'OpenStreetMap' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         'OpenTopoMap' => 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
 
     ];
@@ -40,9 +40,9 @@ class Map extends MapWidget
     public function getMarkers(): array
     {
         return Sector::with(['distributions.product'])->get()->map(function ($sector) {
-            $popup = "<strong>{$sector->name}</strong><br><ul>";
+            $popup = "<strong>{$sector->name}</strong><a href='https://www.google.com/maps?q={$sector->latitude},{$sector->longitude}' target='_blank'> (Google Maps)</a><br><br><ul>";
             foreach ($sector->distributions as $dist) {
-                $popup .= "<li>{$dist->product?->name} - {$dist->quantity} {$dist->product?->unit}</li>";
+                $popup .= "<li>{$dist->product?->name} ({$dist->condition}) - {$dist->quantity} {$dist->product?->unit}</li>";
             }
             $popup .= "</ul>";
 
