@@ -72,33 +72,36 @@ To set up this Laravel project on a Windows system, follow these steps:
     npm run dev
     ```
 
-8. **Start the Development Server**:
+8. **Create Storage Link**:
+    ```bash
+    php artisan storage:link
+    ```
+
+9. **Start the Development Server**:
     ```bash
     php artisan serve
     ```
 
-9. **Queue Worker**:
+10. **Queue Worker**:
     Start the queue worker for background tasks:
     ```bash
     php artisan queue:work --daemon
     ```
 
-10. **Generate Shield Permissions**:
+11. **Generate Shield Permissions**:
     ```bash
     php artisan shield:generate --all
     ```
 
-11. **Create Filament User**:
+12. **Create Filament User**:
     ```bash
     php artisan make:filament-user
     ```
 
-12. **Create Super Admin**:
+13. **Create Super Admin**:
     ```bash
     php artisan shield:super-admin
     ```
-
-
 
 ### Additional Notes
 

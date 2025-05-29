@@ -5,10 +5,10 @@
     $darkModeBrandLogo = filament()->getDarkModeBrandLogo();
     $hasDarkModeBrandLogo = filled($darkModeBrandLogo);
 
-    $getLogoClasses = fn (bool $isDarkMode): string => \Illuminate\Support\Arr::toCssClasses([
+    $getLogoClasses = fn(bool $isDarkMode): string => \Illuminate\Support\Arr::toCssClasses([
         'fi-logo',
-        'flex' => ! $hasDarkModeBrandLogo,
-        'flex dark:hidden' => $hasDarkModeBrandLogo && (! $isDarkMode),
+        'flex' => !$hasDarkModeBrandLogo,
+        'flex dark:hidden' => $hasDarkModeBrandLogo && !$isDarkMode,
         'hidden dark:flex' => $hasDarkModeBrandLogo && $isDarkMode,
     ]);
 
@@ -17,34 +17,18 @@
 
 @capture($content, $logo, $isDarkMode = false)
     @if ($logo instanceof \Illuminate\Contracts\Support\Htmlable)
-        <div
-            {{
-                $attributes
-                    ->class([$getLogoClasses($isDarkMode)])
-                    ->style([$logoStyles])
-            }}
-        >
+        <div {{ $attributes->class([$getLogoClasses($isDarkMode)])->style([$logoStyles]) }}>
             {{ $logo }}
         </div>
     @elseif (filled($logo))
-        <img
-            alt="{{ __('filament-panels::layout.logo.alt', ['name' => $brandName]) }}"
-            src="{{ $logo }}"
-            {{
-                $attributes
-                    ->class([$getLogoClasses($isDarkMode)])
-                    ->style([$logoStyles])
-            }}
-        />
+        <img alt="{{ __('filament-panels::layout.logo.alt', ['name' => $brandName]) }}" src="{{ $logo }}"
+            {{ $attributes->class([$getLogoClasses($isDarkMode), 'text-2xl font-bold leading-5 tracking-tight text-gray-950 dark:text-white'])->style([$logoStyles]) }} />
     @else
         <div
-            {{
-                $attributes->class([
-                    $getLogoClasses($isDarkMode),
-                    'text-xl font-bold leading-5 tracking-tight text-gray-950 dark:text-white',
-                ])
-            }}
-        >
+            {{ $attributes->class([
+                $getLogoClasses($isDarkMode),
+                'text-xl font-bold leading-5 tracking-tight text-gray-950 dark:text-white',
+            ]) }}>
             {{ $brandName }}
         </div>
     @endif
