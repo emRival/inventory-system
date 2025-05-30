@@ -23,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::guessPolicyNamesUsing(function (string $modelClass) {
             return str_replace('Models', 'Policies', $modelClass) . 'Policy';
         });
+
+        if (config('app.env') === 'local') {
+            \Illuminate\Support\Facades\URL::forceScheme('http');
+        }
     }
 }

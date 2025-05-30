@@ -50,7 +50,10 @@ class GenerateItemUnitQRsBatch implements ShouldQueue
 
                 // fetch & simpan image
                 if (! file_exists($path)) {
-                    $qrImage = @file_get_contents("https://quickchart.io/qr?text=" . urlencode($uuid));
+                    $url = config('app.url') . "/item-units/$uuid";
+
+                    $qrImage = @file_get_contents("https://quickchart.io/qr?text=" . urlencode($url));
+
                     if (! $qrImage) {
                         throw new \Exception("Gagal mengambil QR untuk $uuid");
                     }
