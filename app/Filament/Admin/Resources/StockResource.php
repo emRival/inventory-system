@@ -44,6 +44,7 @@ class StockResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0)
+                    ->minValue(1)
                     ->suffix(fn(callable $get) => $get('unit')),
 
                 Forms\Components\Hidden::make('unit'),
@@ -68,7 +69,7 @@ class StockResource extends Resource
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable()
-                    ->minValue(1)
+
                     ->suffix(fn($record) => ' ' . $record->product?->unit),
                 Tables\Columns\TextColumn::make('condition')
                     ->badge()

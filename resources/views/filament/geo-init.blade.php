@@ -45,7 +45,7 @@
 
         <!-- Coba lagi -->
         <button type="button" x-on:click="requestGeo"
-            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
             aria-label="Coba lagi">
             <span aria-hidden="true">🔄</span>
             <span>Coba lagi</span>
@@ -53,7 +53,7 @@
 
         <!-- Pengaturan situs -->
         <button type="button" x-on:click="openSiteSettings"
-            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
             aria-label="Buka pengaturan lokasi">
             <span class="text-base" aria-hidden="true">⚙️</span>
             <span>Copy Pengaturan lokasi</span>
@@ -61,7 +61,7 @@
 
         <!-- Petunjuk reset koneksi -->
         <button type="button" x-on:click="showNetworkGuide = !showNetworkGuide"
-            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            class="inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
             aria-label="Petunjuk reset koneksi">
             <span aria-hidden="true">📶</span>
             <span>Petunjuk reset koneksi</span>
