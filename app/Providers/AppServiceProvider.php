@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\Js;
+use Filament\Facades\Filament;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,9 +26,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::guessPolicyNamesUsing(function (string $modelClass) {
             return str_replace('Models', 'Policies', $modelClass) . 'Policy';
         });
-
-        if (config('app.env') === 'local') {
-            \Illuminate\Support\Facades\URL::forceScheme('http');
-        }
+        // Tambahkan script saat Filament sedang dilayani
+        Filament::serving(function () {
+            FilamentAsset::register([
+                Js::make('geo-prompt', asset('js/geo-prompt.js')),
+            ]);
+        });
     }
 }

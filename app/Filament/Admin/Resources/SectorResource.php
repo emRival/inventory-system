@@ -9,6 +9,7 @@ use App\Models\Sector;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\View;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -55,7 +56,7 @@ class SectorResource extends Resource
                     ])
                     ->columns(2),
 
-                Section::make('Map Details')
+                Section::make('Map Preview')
                     ->schema([
                         OSMMap::make('locations')
                             ->label('Locations')
@@ -85,19 +86,31 @@ class SectorResource extends Resource
                                 $set('longitude', $state['lng']);
                             })
                             ->tilesUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+
+                    ]),
+                //section view
+                Section::make('Map Initialization')
+                    ->visibleOn(['create','edit'])
+                    ->schema([
+                        View::make('filament.geo-init')
                     ]),
 
                 Section::make('Coordinates')
+                    // deskripsi bahwa cordinate ini hanya read tidak perlu di ubah dan akan otomatis terubah jika create button di tekan
+                    ->description('Koordinat ini akan terisi otomatis berdasarkan lokasi Anda saat ini. Jika ingin mengubahnya, silahkan update lokasi pada menu edit.')
                     ->schema([
                         Forms\Components\TextInput::make('latitude')
                             ->label('Latitude')
                             ->required()
+                            ->readOnly()
                             ->default(0)
                             ->numeric(),
                         Forms\Components\TextInput::make('longitude')
                             ->label('Longitude')
                             ->required()
                             ->default(0)
+                            ->readOnly()
+
                             ->numeric(),
                     ])
                     ->columns(2),

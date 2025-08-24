@@ -68,6 +68,7 @@ class StockResource extends Resource
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable()
+                    ->minValue(1)
                     ->suffix(fn($record) => ' ' . $record->product?->unit),
                 Tables\Columns\TextColumn::make('condition')
                     ->badge()

@@ -43,18 +43,17 @@
         <!-- Letterhead with logo and address -->
         <div class="letterhead rounded-t-lg p-6 flex items-center justify-between text-white mb-8">
             <div class="flex items-center">
-                <div class="bg-white p-3 rounded-lg mr-4">
-                    <img src="data:image/png;base64,{{ $logoBase64 }}" alt="Company Logo" class="h-12 w-auto">
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold">DigiScan</h1>
-                    <p class="text-blue-100">Inventory Management System</p>
-                </div>
+            <div class="bg-white p-3 rounded-lg mr-4">
+                <img src="data:image/png;base64,{{ $logoBase64 }}" alt="Company Logo" class="h-12 w-auto">
             </div>
-            <div class="text-center">
-                <p class="font-medium">https://mydigiscan.com/</p>
-                <p class="text-blue-100">Cikarang, Jawa Barat</p>
-                <p class="text-blue-100">Indonesia</p>
+            <div>
+                <h1 class="text-2xl font-bold">DigiScan</h1>
+                <p class="text-blue-100">Inventory Management System</p>
+            </div>
+            </div>
+            <div class="hidden md:block text-center">
+            <p class="text-blue-100">Cikarang, Jawa Barat</p>
+            <p class="text-blue-100">Indonesia</p>
             </div>
         </div>
 

@@ -10,7 +10,10 @@ use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 class Map extends MapWidget
 {
 
-    protected int | string | array $columnSpan = 2;
+    protected int|string|array $columnSpan = 'full';
+
+    // responsive width
+
 
     protected bool $hasBorder = false;
 
